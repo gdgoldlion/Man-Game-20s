@@ -1,0 +1,33 @@
+{
+  "__type__": "cc.AnimationClip",
+  "_name": "TipsLabelAnimation",
+  "_objFlags": 0,
+  "_rawFiles": null,
+  "_duration": 3.98,
+  "sample": 60,
+  "speed": 1,
+  "wrapMode": 2,
+  "curveData": {
+    "props": {
+      "opacity": [
+        {
+          "frame": 0,
+          "value": 255
+        },
+        {
+          "frame": 2,
+          "value": 0
+        },
+        {
+          "frame": 2.783333333333333,
+          "value": 109.2865714278627
+        },
+        {
+          "frame": 3.9833333333333334,
+          "value": 255
+        }
+      ]
+    }
+  },
+  "events": []
+}
