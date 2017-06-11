@@ -120,15 +120,7 @@ export default class NewClass extends cc.Component {
         let touches = event.getTouches();
         let pointInJoystick: cc.Vec2 = this.joystick1.convertTouchToNodeSpaceAR(touches[0]);
 
-        let retVal = Global.math.circleIntersectsLineSegment(0, 0, this.joystickRadius, pointInJoystick.x, pointInJoystick.y, 0, 0);
-
-        if (retVal.result === "没有交点") {
-            this.joystick2.position = pointInJoystick;
-        }
-        else if (retVal.result === "一个交点") {
-            this.joystick2.x = retVal.x;
-            this.joystick2.y = retVal.y;
-        }
+        this.joystick2.position = Global.math.clacJokstickPosition(0,0,this.joystickRadius,pointInJoystick.x, pointInJoystick.y);
 
         //等比三角形计算速度
         let hypotenuse = Math.sqrt(Math.pow(this.joystick2.x, 2) + Math.pow(this.joystick2.y, 2));//斜边

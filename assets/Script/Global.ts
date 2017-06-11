@@ -55,94 +55,43 @@ let appraise = {
 //事件///////////////////////////////////////////////////////////////////
 
 let EventType = {
-    BulletOffScreen: "子弹离开屏幕", 
-    BulletHitPlane: "子弹命中飞机", 
-    PlaneExplosionFinished: "飞机爆炸结束", 
+    BulletOffScreen: "子弹离开屏幕",
+    BulletHitPlane: "子弹命中飞机",
+    PlaneExplosionFinished: "飞机爆炸结束",
     PlusTimeHitPlane: "加时间道具命中飞机",
 };
 
 //数学///////////////////////////////////////////////////////////////////
-//海伦公式
-function heronsformula(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): number {
-    let a = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
-    let b = Math.sqrt(Math.pow(x2 - x3, 2) + Math.pow(y2 - y3, 2));
-    let c = Math.sqrt(Math.pow(x3 - x1, 2) + Math.pow(y3 - y1, 2));
-    let s = (a + b + c) / 2;
-
-    return Math.sqrt(s * (s - a) * (s - b) * (s - c));
-}
-
-function triangleContainPoint(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, px: number, py: number): boolean {
-    let s1 = heronsformula(x1, y1, x2, y2, px, py);
-    let s2 = heronsformula(x2, y2, x3, y3, px, py);
-    let s3 = heronsformula(x3, y3, x1, y1, px, py);
-    let s = heronsformula(x1, y1, x2, y2, x3, y3);
-
-    return Math.abs(s - (s1 + s2 + s3)) < 0.001;
-}
-
 function getRandomInt(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 function getRandomArbitrary(min: number, max: number): number {
-  return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min;
 }
 
 //公式来自：https://thecodeway.com/blog/?p=932 感谢作者的推导，基本思路跟直线和圆相交是一样的，只是用u判断交点是否在线段上
-function circleIntersectsLineSegment(cx: number, cy: number, r: number, x1: number, y1: number, x2: number, y2: number): any {
-    let A = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
-    let B = 2 * ((x2 - x1) * (x1 - cx) + (y2 - y1) * (y1 - cy));
-    let C = cx * cx + cy * cy + x1 * x1 + y1 * y1 - 2 * (cx * x1 + cy * y1) - r * r;
+//根据摇杆特点简化算法，令P1=P3，此时相交的5种情况只存在2、3两种可能性，优化算法，代码如下：
+function clacJokstickPosition(cx: number, cy: number, r: number, touchX: number, touchY: number): cc.Vec2 {
+    let distanceX = touchX - cx;
+    let distanceY = touchY - cy;
 
-    let delta = B * B - 4 * A * C;
-    let retVal: any = {};
+    let A = distanceX * distanceX + distanceY * distanceY;
+    //let B = 0;
+    let C = - r * r;
 
-    if (delta < 0.00001){ //delta === 0
-        retVal.result = "一个交点，相切";
-        let u = -B / (2 * A);
-
-        retVal.x = x1 + u * (x2 - x1);
-        retVal.y = y1 + u * (y2 - y1);
+    if(A + C <= 0){
+        return new cc.Vec2(touchX, touchY);
     }
-    else if(delta < 0) {
-        retVal.result = "没有交点";
+    else{
+        let delta = /*B * B*/ - 4 * A * C;
+
+        let u = (/*-B +*/  Math.sqrt(delta)) / (2 * A);
+
+        return new cc.Vec2(
+            cx + u * distanceX,
+            cy + u * distanceY);
     }
-    else{ //delta > 0
-        let u1 = (-B + Math.sqrt(delta)) / (2 * A);
-        let u2 = (-B - Math.sqrt(delta)) / (2 * A);
-
-       if ((0 <= u1 && u1 <= 1) && (0 <= u2 && u2 <= 1)) {
-            retVal.result = "两个交点";
-
-            retVal.x1 = x1 + u1 * (x2 - x1);
-            retVal.y1 = y1 + u1 * (y2 - y1);
-
-            retVal.x2 = x1 + u2 * (x2 - x1);
-            retVal.y2 = y1 + u2 * (y2 - y1);
-
-        } else if ((u2 < 0 || 1 < u2) && (0 <= u1 && u1 <= 1)) {
-            retVal.result = "一个交点";
-            let u = u1;
-
-            retVal.x = x1 + u * (x2 - x1);
-            retVal.y = y1 + u * (y2 - y1);
-
-        } else if ((u1 < 0 || 1 < u1) && (0 <= u2 && u2 <= 1)) {
-            retVal.result = "一个交点";
-            let u = u2;
-
-            retVal.x = x1 + u * (x2 - x1);
-            retVal.y = y1 + u * (y2 - y1);
-        } else {
-            retVal.result = "没有交点";
-            //两种情况：
-            //1.如果线段和圆没有交点，而且都在圆的外面的话，则u的两个解都是小于0或者大于1的
-            //2.如果线段和圆没有交点，而且都在圆的里面的话，u的两个解符号相反，一个小于0，一个大于1
-        }
-    }
-
-    return retVal;
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -168,8 +117,7 @@ export default {
 
     math: {
         getRandomInt: getRandomInt,
-        triangleContainPoint: triangleContainPoint,
-        circleIntersectsLineSegment: circleIntersectsLineSegment,
         getRandomArbitrary: getRandomArbitrary,
+        clacJokstickPosition: clacJokstickPosition,
     },
 }
