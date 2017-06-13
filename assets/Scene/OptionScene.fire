@@ -202,7 +202,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "d7ecbf71-d9a6-4483-a44a-edc3f920387c"
+      "__uuid__": "dd49d4b8-9a69-43de-acce-97db78863939"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -314,8 +314,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 255,
-      "b": 255,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -476,8 +476,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 255,
-      "b": 255,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -691,8 +691,7 @@
     },
     "bulletCountButtonLabel": {
       "__id__": 18
-    },
-    "text": "hello"
+    }
   },
   {
     "__type__": "cc.Label",
@@ -737,8 +736,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 255,
-      "b": 255,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -1003,8 +1002,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 255,
-      "b": 255,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -1248,8 +1247,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 255,
-      "b": 255,
+      "g": 0,
+      "b": 0,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,

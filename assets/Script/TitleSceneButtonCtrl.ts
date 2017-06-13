@@ -16,6 +16,13 @@ export default class NewClass extends cc.Component {
     }
 
     onExitButtonClicked() {
-        cc.director.end();
+        if (cc.sys.platform === cc.sys.DESKTOP_BROWSER) {
+            window.opener=null;
+            window.open('','_self');
+            window.close();
+        }
+        else{
+            cc.director.end();
+        }
     }
 }
